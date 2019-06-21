@@ -1,0 +1,57 @@
+//- doctype html 
+//- html
+//-   head
+//-   link(rel="stylesheet" href="style.css")
+//-   body
+//-     h1(id="he") This is the signup/login page
+//-     h2 If you already have an account, please sign in below
+//-     input(type="text", id="user")
+//-     input(type="password", id="pwd")
+//-     button(id="signIn", onclick="signIn()") Verify Credentials
+//-     form(action="/checkCred" method="POST")
+//-       button(type="submit",id="login" style="display:none") Well, come on in!
+//-     h2 Create an account!
+//-     input(type="text", id="newUser")
+//-     input(type="password", id="newPwd")
+//-     button(onclick="createAccount()") Submit
+//-     script.
+//- 
+//-       function signIn(){
+//-         if(document.querySelector("#user").value==window.localStorage["username"] &&
+//-         document.querySelector("#pwd").value==window.localStorage["password"]){
+//-           document.getElementById("login").style.display="inline"
+//-           document.getElementById("signIn").style.display="none"
+//-         }
+//-       }
+//- 
+//- 
+//-       function createAccount(){
+//-         window.localStorage.setItem("username", document.getElementById("newUser").value);
+//-         window.localStorage.setItem("password", document.getElementById("newPwd").value);
+//-         alert("Remember your username and password.  You may now sign in.")
+//-       }
+doctype html 
+html
+  head
+    link(rel="stylesheet" href="style.css")
+  body(style="background:url('/images/desk.jpg');postion:relative")
+    h1(style="color:red;font-size:4em;z-index:10;position:absolute;left:50vw;transform:translateX(-50%)") !{text}
+    div(style="background:lightblue;width:100vw;height:30vh;position:absolute;top:50%;transform:translateY(-50%)")
+      div(style="left:50%;top:50%;position:absolute;transform:translate(-50%,-50%)")
+        h1(id="he") This is the signup/login page
+      
+      
+        h2 If you already have an account, please sign in below
+        form(action="/checkCred" method="POST")
+          input(type="text", id="user" name="user1")
+          input(type="password", id="pwd",name="password")
+          button(type="submit",id="login") Well, come on in!
+        
+    
+        h2 Create an account!
+        form(action="/createAccount", method="POST")
+          input(type="text", id="newUser" name="username")
+          input(type="password", id="newPwd" name="password")
+          button(type="submit") Submit
+        
+      

@@ -1,0 +1,50 @@
+doctype html
+html
+  head
+    link(rel="stylesheet" href="style.css")
+    //-this works if style.css is in the'public' directory
+    //otherwise, the code below does the trick(assumed in same directory as view)
+    //- style
+      //- include style.css
+    title = "Hello Pug"
+  body
+    a(href="/")
+      p Lock Up!
+    div.desk
+    div.book
+    div.tabRow
+      div.tabs#t8
+        form(action="/codeLog", method = "GET")
+          button.tab(type="submit")
+            h2 coding
+      div.tabs#t7
+        form(action="/carvingLog", method = "GET")
+          button.tab(type="submit")
+            h2 carving
+      div.tabs#t6
+        form(action="/musicLog", method = "GET")
+          button.tab(type="submit")
+            h2 music
+      div.tabs#t5
+        form(action="/drawingLog", method = "GET")
+          button.tab(type="submit")
+            h2 drawing
+      div.tabs#t4
+        form(action="/readingLog", method = "GET")
+          button.tab(type="submit")
+            h2 reading
+      div.tabs#t3
+        form(action="/movementLog", method = "GET")
+          button.tab(type="submit")
+            h2 movement
+      div.tabs#t2
+        form(action="/cookingLog", method = "GET")
+          button.tab(type="submit")
+            h2 cooking
+      div.tabs#t1
+        form(action="/helloLog", method = "GET")
+          button.tab(type="submit")
+            h2 hello
+            
+            
+    
