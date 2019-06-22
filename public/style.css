@@ -7,9 +7,9 @@ body{
 }
 
 a{
-  position:absolute;
+  /* position:absolute;
   font-size: 5em;
-  z-index: 5;
+  z-index: 5; */
 }
 div.desk{
   background-image: url('/images/desk.jpg');
@@ -111,9 +111,7 @@ button.sbmt{
   background-color:blue;
 }
 a.desk{
-  position:absolute;
-  top:0px;
-  right:0px;
+  font-size:0.5em;
 }
 
 .entry{
@@ -124,4 +122,11 @@ textarea{
   width:90vw;
   font-size: 34px;
   background-image:url('images/entryPage.jpg');
+}
+#postIt{
+  height:90vh;
+  width:9vw;
+  font-size: 3vw;
+  vertical-align: top;
+  background-color:yellow;
 }

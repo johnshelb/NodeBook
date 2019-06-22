@@ -4,14 +4,23 @@ html
     title="Log Entry"
     link(rel="stylesheet" href="style.css")
   body.entry
-    a.desk(href="/home") 
-      button Back to the Desktop!
     h1(style="color:blue;position:relative;width:50vw;margin:auto;text-align:center") !{heading}
+      br
+      a.desk(href="/home") Back to the Desktop!
     hr
     br
     p !{text}
-
-    textarea(name="comment" form="input" autofocus)
     form(action=!{heading}, method="POST" id="input")
-      button(type="submit")
-        p submit
+      textarea(name="comment" form="input" autofocus placeholder="type new entry here")
+      button(type="submit" id="postIt") submit
+    
+
+    script.
+      function edit(index){
+        console.log(index)
+        document.getElementsByClassName("form2")[index].style.display="block"
+      }
+      
+      function remove(index){
+        document.getElementsByClassName("form1")[index].style.display="block"
+      }

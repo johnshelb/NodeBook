@@ -97,7 +97,7 @@ app.post("/update",function(req,res){
   console.log(req.body)
   if(Object.keys(req.body).length>0){//if the box is checked, the name of the box (which is taken from the db row number) becomes a key in the req.body object.  if not checked, the object is empty
     let rowId=Object.keys(req.body)[0]//checkbox name attribute which was set to the db row id in the app.get(:section) route
-    let query=`UPDATE ${tableName} SET date="${req.body.newDate}", entry="<h2>${req.body.newEntry}</h2>" WHERE id=(?) `
+    let query=`UPDATE ${tableName} SET date="${req.body.newDate}", entry="${req.body.newEntry}" WHERE id=(?) `
     db.run(query,[rowId],function(err,rows){
       if (err){
         console.log("We've encountered a problem" + err.message)
@@ -121,23 +121,28 @@ app.post("/update",function(req,res){
       console.log("just checking " +  req.params.section + " and user is " + `${user}` +" and tableName is "+ `${tableName}`)
       db.all(`SELECT * FROM ${tableName};`,[],(err,rows)=>{
         if(rows){
-          rows.forEach((row)=>{
+          rows.forEach((row,index)=>{
             entry+=`
             ${row.date}
             ${row.entry}
-            <form action="/delete" method="POST" id="form1">
-            <input type="text" name=${req.params.section} style="display:none;">
-            <input type="text" name=${row.id} style="display:none;">
-            <button type="submit">Delete</button>
+            <form action="/delete" method="POST" class="form1" style="display:none">
+              <input type="text" name=${req.params.section} style="display:none;">
+              <input type="text" name=${row.id} style="display:none;">
+              <button type="submit">I'm sure I want to delete this post!</button>
             </form>
 
-            <form action="/update" method="POST" id="form2">
-            <input type="text" name=${req.params.section} style="display:none;">
-            <input type="text" name=${row.id} style="display:none;">
-            <input type="text" name="newDate">
-            <input type="text" name="newEntry">
-            <button type="submit">Update</button>
+            <form action="/update" method="POST" class="form2" style="display:none;">
+              <input type="text" name=${req.params.section} style="display:none;">
+              <input type="text" name=${row.id} style="display:none;">
+              <input type="text" name="newDate" value="${row.date}">
+              <input type="text" name="newEntry" value="${row.entry}">
+              <button type="submit">Update</button>
             </form>
+            <br>
+            <button onclick="edit(${index})" type="button"> Edit?</button>
+            <button onclick="remove(${index})" type="button">Delete?</button>
+
+            <hr>
             <br>
             `
           })
@@ -181,11 +186,11 @@ function createPost(section,req,res){
   tableName=`${user}` + "_" + `${section}`
   let sql=`INSERT INTO ${tableName} (entry,date) VALUES (?,?);`
 
-  db.run(sql,[`<br><h2>${req.body.comment}</h2>`,date], function(err) {
+  db.run(sql,[`<h2>${req.body.comment}</h2>`,date], function(err) {
     if (err) {
       return console.log(err.message);
     }
-    res.render('home.pug')
+    res.redirect(`/${section}`)
   });
 }
 app.listen(5000);
