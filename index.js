@@ -42,14 +42,12 @@ app.post('/checkCred',function(req,res){
 
 app.post('/createAccount',function(req,res){
   db.run(`INSERT INTO users(username,password) VALUES(?,?);`,[req.body.username,req.body.password],function(err,rows){
-    console.log(`account created with username ${req.body.username}`)
   });
 
   //Create the tables in db to hold log entries and dates
   const TABLES=["helloLog","codeLog","readingLog","carvingLog","movementLog","musicLog","cookingLog","drawingLog"]//will need to make this update dynamically in next version (as user can add/delete/edit notebook tabs)
   TABLES.forEach(function(item,index){
     tableName=`${req.body.username}`+"_"+`${item}`
-    console.log(`tableName is ${tableName}`)
     let makeTable=`CREATE TABLE IF NOT EXISTS ${tableName}(
       id INTEGER PRIMARY KEY NOT NULL,
       date datetime,
@@ -76,7 +74,6 @@ app.get('/home',function(req,res){
 })
 
 app.post("/delete",function(req,res){
-  console.log(req.body)
   if(Object.keys(req.body).length>0){//if the box is checked, the name of the box (which is taken from the db row number) becomes a key in the req.body object.  if not checked, the object is empty
     let rowId=Object.keys(req.body)[0]//checkbox name attribute which was set to the db row id in the app.get(:section) route
     let query=`DELETE FROM ${tableName} WHERE id=(?)`
@@ -94,10 +91,9 @@ app.post("/delete",function(req,res){
 })
 
 app.post("/update",function(req,res){
-  console.log(req.body)
   if(Object.keys(req.body).length>0){//if the box is checked, the name of the box (which is taken from the db row number) becomes a key in the req.body object.  if not checked, the object is empty
     let rowId=Object.keys(req.body)[0]//checkbox name attribute which was set to the db row id in the app.get(:section) route
-    let query=`UPDATE ${tableName} SET date="${req.body.newDate}", entry="${req.body.newEntry}" WHERE id=(?) `
+    let query=`UPDATE ${tableName} SET date="${req.body.newDate}", entry="${req.body.newEntry}<p style='color:red' class='marked'>This entry was updated on ${getDate()}</p>" WHERE id=(?)`
     db.run(query,[rowId],function(err,rows){
       if (err){
         console.log("We've encountered a problem" + err.message)
@@ -115,15 +111,19 @@ app.post("/update",function(req,res){
   // <input type="checkbox" name=${row.id}>  FROM LiNE 133
 
   app.get("/:section",function(req,res){
+    legit=true//REMOVE!!!!!!!!!!!!!!!!!!!!
     if(legit){
       let entry=""
       tableName=`${user}` + "_" +`${req.params.section}`
-      console.log("just checking " +  req.params.section + " and user is " + `${user}` +" and tableName is "+ `${tableName}`)
       db.all(`SELECT * FROM ${tableName};`,[],(err,rows)=>{
         if(rows){
+          let i=0
           rows.forEach((row,index)=>{
+            i++
             entry+=`
+            <article id=${i}>
             ${row.date}
+            <br>
             ${row.entry}
             <form action="/delete" method="POST" class="form1" style="display:none">
               <input type="text" name=${req.params.section} style="display:none;">
@@ -135,14 +135,14 @@ app.post("/update",function(req,res){
               <input type="text" name=${req.params.section} style="display:none;">
               <input type="text" name=${row.id} style="display:none;">
               <input type="text" name="newDate" value="${row.date}">
-              <input type="text" name="newEntry" value="${row.entry}">
+              <textarea class="edit" name="newEntry">${row.entry}</textarea>
               <button type="submit">Update</button>
             </form>
-            <br>
             <button onclick="edit(${index})" type="button"> Edit?</button>
             <button onclick="remove(${index})" type="button">Delete?</button>
 
             <hr>
+            </article>
             <br>
             `
           })
@@ -151,7 +151,6 @@ app.post("/update",function(req,res){
             text:`${entry}`,
           })
         }
-        res.render(`${req.params.section}`+ ".pug")
       })
     }else{
       res.render('login.pug');
@@ -166,6 +165,9 @@ function getDate(){
   var now=new Date();
   var hour=Number(now.getUTCHours())-4;
   var minutes=now.getUTCMinutes();
+  if(minutes<10){
+    minutes="0" + String(minutes);
+  }
   var dayPart;
   if(hour>12){
     hour-=12;
@@ -180,13 +182,11 @@ function getDate(){
 }
 
 function createPost(section,req,res){
-  console.log(`for some reason, in createPost, tableName is ${tableName}`)
   let date=getDate();
-  console.log(`posting from ${section}!`)
   tableName=`${user}` + "_" + `${section}`
   let sql=`INSERT INTO ${tableName} (entry,date) VALUES (?,?);`
 
-  db.run(sql,[`<h2>${req.body.comment}</h2>`,date], function(err) {
+  db.run(sql,[`${req.body.comment}`,date], function(err) {
     if (err) {
       return console.log(err.message);
     }

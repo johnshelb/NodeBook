@@ -2,15 +2,12 @@
   padding:0;
   margin:0;
 }
+
 body{
   background-image: url("/images.desk.jpg");
+  --showHide
 }
 
-a{
-  /* position:absolute;
-  font-size: 5em;
-  z-index: 5; */
-}
 div.desk{
   background-image: url('/images/desk.jpg');
   background-size:cover;
@@ -34,7 +31,9 @@ div.book{
 img{
   opacity: 0.4;
 }
-
+article{
+  font-size: 1em;
+}
 .tabs{
   position:absolute;
   height: 15%;
@@ -91,6 +90,12 @@ img{
   height:12.25%;
   background-color: pink;
 }
+#posts{
+  display:var(--showHide);
+}
+.marked{
+  display:var(--showHide);
+}
 form{
   height:100%;
 }
@@ -110,6 +115,12 @@ button.tab{
 button.sbmt{
   background-color:blue;
 }
+#lockup{
+  font-size:3vw;
+  position:relative;
+  text-align:center;
+  color:red;
+}
 a.desk{
   font-size:0.5em;
 }
@@ -117,10 +128,16 @@ a.desk{
 .entry{
   background-image:url('images/entryPage.jpg');
 }
-textarea{
+textarea.entry{
   height:90vh;
   width:90vw;
   font-size: 34px;
+  background-image:url('images/entryPage.jpg');
+}
+textarea.edit{
+  height:10vh;
+  width:90vw;
+  font-size: 20px;
   background-image:url('images/entryPage.jpg');
 }
 #postIt{

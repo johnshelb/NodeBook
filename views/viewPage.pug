@@ -6,21 +6,71 @@ html
   body.entry
     h1(style="color:blue;position:relative;width:50vw;margin:auto;text-align:center") !{heading}
       br
+      button(onclick='togglePosts()') Show/Hide Posts
       a.desk(href="/home") Back to the Desktop!
+      button(onclick='toggleAlerts()') Show/Hide Edit Alerts
     hr
     br
-    p !{text}
+    div(id="posts" style="display:var(--showHide);") !{text}
+    a(href="/" id="lockup") 
+      p Lock Up!
     form(action=!{heading}, method="POST" id="input")
-      textarea(name="comment" form="input" autofocus placeholder="type new entry here")
-      button(type="submit" id="postIt") submit
-    
-
+      textarea(class="entry" name="comment" style="font-family:Snell Roundhand" form="input" autofocus placeholder="type new entry here")
+      button(type="submit" id="postIt") 
+        p(style='font-family:Comic Sans') submit
+        
     script.
-      function edit(index){
-        console.log(index)
-        document.getElementsByClassName("form2")[index].style.display="block"
+      let x=document.getElementsByTagName("article")
+      document.getElementById(`${x.length-2}`).scrollIntoView()
+      
+      
+      let editAlerts=Array.from(document.getElementsByClassName("marked"));
+      let posts=document.getElementById("posts").style
+      
+
+      localStorage["state"]=="show"?posts.setProperty('--showHide',"block"):posts.setProperty('--showHide',"none")
+      if(localStorage["alerts"]=="show"){
+        editAlerts.forEach((item)=>{item.style.setProperty('--showHide',"block")})
+        }else{
+          editAlerts.forEach((item)=>{item.style.setProperty('--showHide',"none")})
+        }
+    
+      function hidePosts(){
+        localStorage["state"]="don't show"
+        document.getElementById("posts").style.setProperty('--showHide',"none")      
+      }
+    
+      function showPosts(){
+        localStorage["state"]="show"
+        document.getElementById("posts").style.setProperty('--showHide',"block")        
+      }
+    
+    
+      function togglePosts(){
+        if(localStorage["state"]=="don't show"){
+          localStorage["state"]="show";
+          document.getElementById("posts").style.setProperty('--showHide',"block");
+        }else{
+          localStorage["state"]="don't show";
+          document.getElementById("posts").style.setProperty('--showHide',"none");
+        }
       }
       
+      function toggleAlerts(){
+        if(localStorage["alerts"]=="don't show"){
+          localStorage["alerts"]="show";
+          editAlerts.forEach((item)=>{item.style.display="block"})
+          }else{
+            localStorage["alerts"]="don't show";
+            editAlerts.forEach((item)=>{item.style.display="none"})
+        }
+      }
+      //makes deletes post button visible
       function remove(index){
         document.getElementsByClassName("form1")[index].style.display="block"
       }
+      //makes editing window visible
+      function edit(index){
+        document.getElementsByClassName("form2")[index].style.display="block"
+      }
+      
